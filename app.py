@@ -1,23 +1,28 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
 
-# Title
-st.title("My Streamlit App")
+# Title and description
+st.title("Combine Multiple Datasets")
+st.write("Upload multiple parts of your dataset to combine and process them!")
 
-# Description
-st.write("This app allows you to upload and preview a dataset!")
+# Allow user to upload multiple files
+uploaded_files = st.file_uploader(
+    "Upload your dataset parts here",
+    type=["csv"],
+    accept_multiple_files=True
+)
 
-# File upload widget
-uploaded_file = st.file_uploader("Choose a CSV file", type="csv")  # Limiting to CSV files for clarity
-
-# Check if a file has been uploaded
-if uploaded_file is not None:
-    # Read the uploaded file into a DataFrame
-    df = pd.read_csv(uploaded_file)
+if uploaded_files:
+    dfs = []  # List to store each uploaded dataset
     
-    # Show a message and the preview of the DataFrame
-    st.write("Preview of your dataset:")
-    st.dataframe(df)
-
-    # Optionally display the shape of the dataset
-    st.write(f"Dataset contains {df.shape[0]} rows and {df.shape[1]} columns.")
+    for uploaded_file in uploaded_files:
+        df = pd.read_csv(uploaded_file)
+        dfs.append(df)
+        st.write(f"Preview of {uploaded_file.name}:")
+        st.dataframe(df.head())
+    
+    # Combine all uploaded datasets into one
+    combined_df = pd.concat(dfs, ignore_index=True)
+    
+    st.write("### Combined Dataset:")
+    st.dataframe(combined_df.head())  # Show preview of the combined dataset
