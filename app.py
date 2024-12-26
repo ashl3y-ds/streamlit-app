@@ -26,6 +26,7 @@ if uploaded_files:
     
     st.write("### Combined Dataset:")
     st.dataframe(combined_df.head())  # Show preview of the combined dataset
-
-    # Optionally display the shape of the dataset
-    st.write(f"Dataset contains {df.shape[0]} rows and {df.shape[1]} columns.")
+    
+    # Save combined dataset locally if required
+    combined_df.to_csv("combined_dataset.csv", index=False)
+    st.success("Dataset combined and saved locally as 'combined_dataset.csv'!")
