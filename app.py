@@ -26,3 +26,6 @@ if uploaded_files:
     
     st.write("### Combined Dataset:")
     st.dataframe(combined_df.head())  # Show preview of the combined dataset
+
+    # Optionally display the shape of the dataset
+    st.write(f"Dataset contains {df.shape[0]} rows and {df.shape[1]} columns.")
