@@ -2,31 +2,23 @@ import pandas as pd
 import streamlit as st
 
 # Title and description
-st.title("Combine Multiple Datasets")
-st.write("Upload multiple parts of your dataset to combine and process them!")
+st.title("Combined Dataset Viewer")
 
-# Allow user to upload multiple files
-uploaded_files = st.file_uploader(
-    "Upload your dataset parts here",
-    type=["csv"],
-    accept_multiple_files=True
-)
+# File uploads for two CSV files
+uploaded_file1 = st.file_uploader("Upload the first CSV file", type=["csv"])
+uploaded_file2 = st.file_uploader("Upload the second CSV file", type=["csv"])
 
-if uploaded_files:
-    dfs = []  # List to store each uploaded dataset
+if uploaded_file1 and uploaded_file2:
+    # Read the uploaded CSV files
+    df1 = pd.read_csv(uploaded_file1)
+    df2 = pd.read_csv(uploaded_file2)
     
-    for uploaded_file in uploaded_files:
-        df = pd.read_csv(uploaded_file)
-        dfs.append(df)
-        st.write(f"Preview of {uploaded_file.name}:")
-        st.dataframe(df.head())
-    
-    # Combine all uploaded datasets into one
-    combined_df = pd.concat(dfs, ignore_index=True)
-    
-    st.write("### Combined Dataset:")
-    st.dataframe(combined_df.head())  # Show preview of the combined dataset
-    
-    # Save combined dataset locally if required
-    combined_df.to_csv("combined_dataset.csv", index=False)
-    st.success("Dataset combined and saved locally as 'combined_dataset.csv'!")
+    # Combine the datasets
+    combined_df = pd.concat([df1, df2], ignore_index=True)
+
+    # Display combined dataset shape
+    st.write(f"The combined dataset contains {combined_df.shape[0]} rows and {combined_df.shape[1]} columns.")
+
+    # Display the combined dataset
+    st.write("Here is a preview of the combined dataset:")
+    st.dataframe(combined_df)
